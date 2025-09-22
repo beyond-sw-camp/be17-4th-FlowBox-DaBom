@@ -80,8 +80,16 @@
 - 따라서 본 파이프라인은 Kaniko Executor를 활용해 Dockerfile 기반 이미지를 빌드하고, Docker Hub로 푸시
 ---
 
-# 💻 동작 화면
+# 💻 프론트 동작 화면
 - 프론트 블루 그린 배포
   ![front-blue_green (2)](https://github.com/user-attachments/assets/a199f803-b8b7-40cb-baf7-bb7d965afc43)
+
+
+  # 💻 백엔드 동작 화면
+- 백엔드 블루 그린 배포
+  ![back-bg (1)](https://github.com/user-attachments/assets/d1ac0133-199a-4d70-a807-30c816a4fea4)
+
+
+
 
 
