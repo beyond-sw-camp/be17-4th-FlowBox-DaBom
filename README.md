@@ -49,7 +49,8 @@
 
 # 💻 백엔드 동작 화면
 - 백엔드 블루 그린 배포
-  ![back-bg (1)](https://github.com/user-attachments/assets/d1ac0133-199a-4d70-a807-30c816a4fea4)
+  ![back-bg (1)](https://github.com/user-attachments/assets/187cbb61-d494-48c0-85c0-629598da24f9)
+
 
 ---
 
@@ -71,3 +72,4 @@
 6. **Kubernetes 배포 자동화**
    - 새로운 Docker Image tag를 기반으로 Deployment 갱신
    - Frontend / Backend 모두 Blue-Green 배포 전략 적용
+
