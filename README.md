@@ -75,6 +75,33 @@
    - 새로운 Docker Image tag를 기반으로 Deployment 갱신
    - Frontend / Backend 모두 Blue-Green 배포 전략 적용
 ---
-# 🌏 CI/CD 시나리오
+
+# 🔵🟢 Blue/Green Deployment
+### 무중단 배포(Zero-Downtime)를 위한 **Blue/Green 배포 전략**
+
+Blue-Green 배포는 동일한 두 개의 환경(Blue, Green)을 운영하여 무중단 배포를 가능하게 하는 방식입니다. 새로운 버전은 Green 환경에 먼저 배포되고, 정상 동작이 확인되면 트래픽을 Blue에서 Green으로 전환합니다. 이 과정에서 서비스 중단 없이 새 버전으로 전환이 가능하며, 만약 오류가 발생할 경우 즉시 Blue 환경으로 롤백할 수 있어 안정성이 높습니다.
+
+👉 자세한 내용은 [📘 블루/그린 배포 Wiki](https://github.com/beyond-sw-camp/be17-4th-FlowBox-DaBom/wiki/%EB%B0%B0%ED%8F%AC-%EB%B0%A9%EC%8B%9D)
+
+---
+
+# 🐳 Kaniko
+### 도커 데몬 없이 컨테이너 이미지를 빌드할 수 있는 **Kaniko 사용법**  
+
+프론트엔드 측면에서는 사용자가 웹 서비스 이용 중에도 화면이 끊기지 않고 자연스럽게 새 버전을 경험할 수 있도록 하기 위해 Blue-Green 배포를 적용했습니다. 백엔드의 경우 세션 유지, 트랜잭션 안정성, 데이터 정합성 보장을 위해 기존 환경(Blue)과 새로운 환경(Green)을 분리하여 운영하는 것이 적합했습니다. 이를 통해 사용자 경험 품질을 높이고, 장애 발생 시 신속히 복구할 수 있는 구조를 마련했습니다
+
+👉 자세한 내용은 [📘 카니코 Wiki](https://github.com/beyond-sw-camp/be17-4th-FlowBox-DaBom/wiki/Kaniko-%EC%82%AC%EC%9A%A9-%EB%B0%B0%EA%B2%BD)
+
+---
+
+# ⚙️ Github Actions 🤜🤛 Jenkins
+### CI/CD 도구 비교와 **Jenkins 선택 이유 (병렬 처리 활용)**  
+
+Canary 배포 방식은 전체 트래픽 중 일부만 새로운 버전에 흘려보내 실제 사용 환경에서 검증할 수 있다는 장점이 있습니다. 하지만 동시에 여러 버전을 운영하게 되면 API 호환성 문제, 데이터 불일치, 사용자 경험(UI/UX) 혼선이 발생할 가능성이 있습니다. 이러한 복잡성을 관리하기 어려운 상황에서는 Canary 방식보다 Blue-Green 배포가 더 단순하고 안정적이므로, 본 프로젝트에서는 Blue-Green 배포 방식을 선택했습니다.
+
+👉 자세한 내용은 [📘 Github Actions vs Jenkins Wiki](https://github.com/beyond-sw-camp/be17-4th-FlowBox-DaBom/wiki/Github-Actions-vs-Jenkins-%E2%80%93-%EC%84%A0%ED%83%9D-%EC%9D%B4%EC%9C%A0)
+
+
+
 
 
