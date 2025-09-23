@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: spring-deployment-\$NEW_VER
+  namespace: dabom
+
+spec:
+  selector:
+    matchLabels:
+      type: backend
+      ver: \$NEW_VER # blue/green
+  replicas: 1
+
+  strategy:
+    type: RollingUpdate
+
+  template:
+    metadata:
+      labels:
+        type: backend
+        ver: \$NEW_VER # blue/green
+    spec:
+      containers:
+        - name: container
+          image: ${docker_name}/dabom-back:\$IMAGE_TAG # image version
+          envFrom:
+            - configMapRef:
+                name: dabom-config
+
+          livenessProbe:
+            httpGet:
+              path: /api/health/health
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 10
+
+          readinessProbe:
+            httpGet:
+              path: /api/health/test
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            successThreshold: 3
+
+      terminationGracePeriodSeconds: 0
