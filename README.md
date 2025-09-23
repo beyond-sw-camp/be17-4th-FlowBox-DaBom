@@ -42,6 +42,17 @@
 <img width="896" height="531" alt="Internet_of_Things_Architecture_8" src="https://github.com/user-attachments/assets/bb524dc6-a15f-4e4b-bc96-5c380fd2caeb" />
 
 
+# 💻 프론트 동작 화면
+- 프론트 블루 그린 배포
+  ![front-blue_green (2)](https://github.com/user-attachments/assets/a199f803-b8b7-40cb-baf7-bb7d965afc43)
+
+
+# 💻 백엔드 동작 화면
+- 백엔드 블루 그린 배포
+  ![back-bg (1)](https://github.com/user-attachments/assets/d1ac0133-199a-4d70-a807-30c816a4fea4)
+
+---
+
 # 🌏 CI/CD 시나리오
 1. **개발자가 코드 Push**
    - Backend Github → main 브랜치 push 시 Backend CI/CD 파이프라인 동작
@@ -60,7 +71,9 @@
 6. **Kubernetes 배포 자동화**
    - 새로운 Docker Image tag를 기반으로 Deployment 갱신
    - Frontend / Backend 모두 Blue-Green 배포 전략 적용
+
 ---
+
 ## 배포 방식: Blue-Green Deployment
 ### Blue-Green 배포 개념
 - 동일한 환경(Blue, Green) 두 개를 유지 
@@ -75,24 +88,10 @@
 - **세션/트랜잭션 안정성**: API 서버는 연결 중단 없이 서비스 가능해야 함 
 - **Zero-Downtime**: 기존 연결은 Blue에서 처리, 신규 연결은 Green으로 전환 
 - **안전한 롤백**: 배포 후 에러 발생 시 Green 중단, Blue로 즉시 복귀
+
 ---
+
 ## Kaniko 사용 배경
 - Jenkins Agent Pod 환경에서는 Docker Daemon을 실행할 수 없음 (DID: Docker-in-Docker 제약)
 - Kaniko는 Daemonless 방식으로 동작하여 Kubernetes 환경에서도 안전하게 이미지 빌드 가능 
 - 따라서 본 파이프라인은 Kaniko Executor를 활용해 Dockerfile 기반 이미지를 빌드하고, Docker Hub로 푸시
----
-
-# 💻 프론트 동작 화면
-- 프론트 블루 그린 배포
-  ![front-blue_green (2)](https://github.com/user-attachments/assets/a199f803-b8b7-40cb-baf7-bb7d965afc43)
-
-
-  # 💻 백엔드 동작 화면
-- 백엔드 블루 그린 배포
-  ![back-bg (1)](https://github.com/user-attachments/assets/d1ac0133-199a-4d70-a807-30c816a4fea4)
-
-
-
-
-
-
