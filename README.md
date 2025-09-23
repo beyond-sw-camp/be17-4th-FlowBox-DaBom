@@ -39,7 +39,8 @@
 ![ansible](https://img.shields.io/badge/ansible-EE0000.svg?style=for-the-badge&logo=ansible&logoColor=white)
 
 # 🔧 시스템 아키텍처
-<img width="896" height="531" alt="undefined_4" src="https://github.com/user-attachments/assets/1badc011-384c-4254-b789-ab7c1c88bbcd" />
+<img width="896" height="531" alt="undefined_6" src="https://github.com/user-attachments/assets/c8ccbafe-c6c6-4f1f-8970-f84986f0e901" />
+
 
 
 
@@ -73,5 +74,7 @@
 6. **Kubernetes 배포 자동화**
    - 새로운 Docker Image tag를 기반으로 Deployment 갱신
    - Frontend / Backend 모두 Blue-Green 배포 전략 적용
+---
+# 🌏 CI/CD 시나리오
 
 
