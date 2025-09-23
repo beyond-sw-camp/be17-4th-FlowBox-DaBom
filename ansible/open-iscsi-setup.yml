@@ -1,0 +1,20 @@
+- name: Install and Configure open-iscsi
+  hosts: users,master
+  become: yes
+  tasks:
+
+    - name: Install open-iscsi package
+      apt:
+        name: open-iscsi
+        state: present
+        update_cache: yes
+
+    - name: Restart iscsid service
+      systemd:
+        name: iscsid
+        state: restarted
+
+    - name: Enable iscsid service on boot
+      systemd:
+        name: iscsid
+        enabled: yes

@@ -1,0 +1,54 @@
+- name: Kubernetes Cluster Setup
+  hosts: master
+  become: yes
+  tasks:
+    - name: K8S reset
+      command: kubeadm reset --force
+
+    - name: Initialize Kubernetes Master
+      command: kubeadm init --pod-network-cidr=100.100.100.0/24 --cri-socket=unix:///run/containerd/containerd.sock
+      register: kubeadm_init_output
+      changed_when: "'Your Kubernetes control-plane has initialized' in kubeadm_init_output.stdout"
+
+    - name: Create .kube directory
+      file:
+        path: "{{ ansible_env.HOME }}/.kube"
+        state: directory
+        mode: '0755'
+
+    - name: Copy kubeconfig file
+      copy:
+        src: /etc/kubernetes/admin.conf
+        dest: "{{ ansible_env.HOME }}/.kube/config"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0644'
+        remote_src: yes
+
+    - name: Extract Join Command
+      shell: kubeadm token create --print-join-command
+      register: join_command
+      changed_when: false
+
+    - name: Save Join Command to a file
+      copy:
+        content: "{{ join_command.stdout }}"
+        dest: /tmp/k8s_join_command.txt
+
+    - name: Share join command across plays
+      add_host:
+        name: k8s_shared
+        join_cmd: "{{ join_command.stdout | trim }}"
+      run_once: true
+
+- name: Join Worker Nodes to Cluster
+  hosts: users
+  become: yes
+  tasks:
+    - name: K8S reset
+      command: kubeadm reset --force
+
+    - name: Run Join Command
+      command: "{{ hostvars['k8s_shared'].join_cmd }}"
+      register: join_result
+      changed_when: "'This node has joined the cluster' in join_result.stdout"

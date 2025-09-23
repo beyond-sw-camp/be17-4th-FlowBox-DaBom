@@ -1,0 +1,111 @@
+- name: Kubernetes Cluster Setup
+  hosts: master, worker
+  become: true
+  tasks:
+
+    - name: Install containerd
+      apt:
+        name: containerd
+        state: present
+        update_cache: yes
+
+    - name: Configure virtual network
+      copy:
+        dest: /etc/sysctl.d/99-k8s-cri.conf
+        content: |
+          net.bridge.bridge-nf-call-iptables=1
+          net.bridge.bridge-nf-call-ip6tables=1
+          net.ipv4.ip_forward=1
+
+    - name: Reload sysctl
+      shell: |
+        sysctl --system
+
+    - name: Load kernel modules
+      command: modprobe overlay
+    - name: Load kernel modules for br_netfilter
+      command: modprobe br_netfilter
+
+    - name: Create modules-load configuration for Kubernetes
+      copy:
+        dest: /etc/modules-load.d/k8s.conf
+        content: |
+          overlay
+          br_netfilter
+
+    - name: Set iptables to legacy
+      command: update-alternatives --config iptables
+      args:
+        creates: /etc/alternatives/iptables
+
+    - name: Disable swap
+      command: swapoff -a
+
+    - name: Update fstab to disable swap on reboot
+      lineinfile:
+        path: /etc/fstab
+        regexp: '^/swap.img'
+        state: absent
+
+    - name: Update GRUB configuration for cgroup
+      lineinfile:
+        path: /etc/default/grub
+        regexp: '^GRUB_CMDLINE_LINUX='
+        line: 'GRUB_CMDLINE_LINUX="systemd.unified_cgroup_hierarchy=0"'
+      notify:
+        - Update grub
+
+    - name: Download the Kubernetes GPG key
+      shell: |
+        curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg --yes
+      #args:
+        #creates: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+    - name: Add Kubernetes Repo List
+      shell: |
+        echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+      #args:
+        #creates: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+    - name: Update apt package list
+      shell: |
+        apt update
+
+    - name: Install Kubernetes (kubeadm, kubelet, kubectl)
+      apt:
+        name:
+          - kubeadm
+          - kubelet
+          - kubectl
+        state: present
+        update_cache: yes
+
+    - name: Configure kubelet to use cgroupfs
+      lineinfile:
+        path: /etc/default/kubelet
+        regexp: '^KUBELET_EXTRA_ARGS='
+        line: 'KUBELET_EXTRA_ARGS="--cgroup-driver=cgroupfs"'
+
+    - name: Modify containerd service file
+      lineinfile:
+        path: /usr/lib/systemd/system/containerd.service
+        regexp: '^KillMode='
+        line: 'KillMode=mixed'
+
+    - name: Reload systemd manager configuration
+      systemd:
+        daemon_reload: yes
+
+    - name: Restart containerd service
+      systemd:
+        name: containerd
+        state: restarted
+
+    - name: Restart kubelet service
+      systemd:
+        name: kubelet
+        state: restarted
+
+  handlers:
+    - name: Update grub
+      command: update-grub
