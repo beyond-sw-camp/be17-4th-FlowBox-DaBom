@@ -39,6 +39,8 @@
 ![ansible](https://img.shields.io/badge/ansible-EE0000.svg?style=for-the-badge&logo=ansible&logoColor=white)
 
 # 🔧 시스템 아키텍처
+<img width="896" height="531" alt="Internet_of_Things_Architecture_8" src="https://github.com/user-attachments/assets/bb524dc6-a15f-4e4b-bc96-5c380fd2caeb" />
+
 
 # 🌏 CI/CD 시나리오
 1. **개발자가 코드 Push**
@@ -88,6 +90,7 @@
   # 💻 백엔드 동작 화면
 - 백엔드 블루 그린 배포
   ![back-bg (1)](https://github.com/user-attachments/assets/d1ac0133-199a-4d70-a807-30c816a4fea4)
+
 
 
 
