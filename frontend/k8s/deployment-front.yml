@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vue-deployment-\${NEXT_VER} # blue/green
+  namespace: dabom
+
+spec:
+  selector:
+    matchLabels:
+      type: app
+      ver: \${NEXT_VER} # blue/green
+  replicas: 1
+
+  strategy:
+    type: RollingUpdate
+
+  template:
+    metadata:
+      labels:
+        type: app
+        ver: \${NEXT_VER} # blue/green
+    spec:
+      containers:
+        - name: container
+          image: ${IMAGE_NAME}:${IMAGE_TAG}
+          ports:
+            - containerPort: 80
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 2
+
+      terminationGracePeriodSeconds: 0
